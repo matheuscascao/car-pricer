@@ -1,0 +1,33 @@
+{
+  "name": "car-pricer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc",
+    "start:dev": "npx nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheuscascao/car-pricer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheuscascao/car-pricer/issues"
+  },
+  "homepage": "https://github.com/matheuscascao/car-pricer#readme",
+  "devDependencies": {
+    "@types/node": "^20.5.7",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  },
+  "dependencies": {
+    "webpack": "^5.88.2"
+  }
+}
