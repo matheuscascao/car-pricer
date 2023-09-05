@@ -28,6 +28,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "mongoose": "^7.5.0",
     "puppeteer": "^21.1.1",
     "puppeteer-core": "^21.1.1",
     "webpack": "^5.88.2"
