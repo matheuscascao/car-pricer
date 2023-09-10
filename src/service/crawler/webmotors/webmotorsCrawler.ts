@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import ICarItem from "../../../models/CarItem";
+import CarItem from "../../../models/CarItem";
 
 async function webMotorsCrawler(model: string, manufacturer: string): Promise<void> {
     const basePageUrl = "https://www.webmotors.com.br/carros/estoque";
@@ -21,25 +21,23 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<vo
 
     const carsData = await page.$$eval(selector, items => {
         return items.map(el => {
+
             const modelElement = el.querySelector(".sc-hqyNC");
             const priceElement = el.querySelector(".sc-cJSrbW");
             const yearOfManufactureElement = el.querySelectorAll(".sc-frDJqD");
             const locationElement = el.querySelector(".sc-kgAjT");
             const mileageElement = el.querySelectorAll(".sc-cHGsZl.goowTJ");
 
-            const model = modelElement ? modelElement.textContent?.trim() : "N/A";
-            const price = priceElement ? priceElement.textContent?.trim() : "N/A";
-            const yearOfManufacture = yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() : "N/A";
-            const location = locationElement ? locationElement.textContent?.trim() : "N/A";
-            const mileage = mileageElement ? mileageElement[1].textContent?.trim() : "N/A";
+            const carElement: CarItem = {
+                model: modelElement ? modelElement.textContent?.trim() : "N/A",
+                price: priceElement ? priceElement.textContent?.trim() : "N/A",
+                yearOfManufacture: yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() : "N/A",
+                location: locationElement ? locationElement.textContent?.trim() : "N/A",
+                mileage: mileageElement ? mileageElement[1].textContent?.trim() : "N/A",
+                manufacturer: "placeholder"
+            }
 
-            return {
-                model,
-                price,
-                yearOfManufacture,
-                location,
-                mileage
-            };
+            return carElement;
         });
     });
 
