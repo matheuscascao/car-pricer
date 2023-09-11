@@ -28,16 +28,27 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<vo
             const locationElement = el.querySelector(".sc-kgAjT");
             const mileageElement = el.querySelectorAll(".sc-cHGsZl.goowTJ");
 
-            const carElement: CarItem = {
-                model: modelElement ? modelElement.textContent?.trim() : "N/A",
-                price: priceElement ? priceElement.textContent?.trim() : "N/A",
-                yearOfManufacture: yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() : "N/A",
-                location: locationElement ? locationElement.textContent?.trim() : "N/A",
-                mileage: mileageElement ? mileageElement[1].textContent?.trim() : "N/A",
-                manufacturer: "placeholder"
-            }
+            // const carElement: CarItem = {
+            //     model: modelElement ? modelElement.textContent?.trim() : "N/A",
+            //     price: priceElement ? priceElement.textContent?.trim() : "N/A",
+            //     yearOfManufacture: yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() : "N/A",
+            //     location: locationElement ? locationElement.textContent?.trim() : "N/A",
+            //     mileage: mileageElement ? mileageElement[1].textContent?.trim() : "N/A",
+            //     manufacturer: "placeholder"
+            // }
 
-            return carElement;
+            const model = modelElement ? modelElement.textContent?.trim() as string: "N/A";
+            const yearOfManufacture = yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() as string: "N/A";
+            const price = priceElement ? priceElement.textContent?.trim() as string: "N/A";
+            const mileage = mileageElement ? mileageElement[1].textContent?.trim() as string: "N/A";
+            const manufacturer = "placeholder";
+            const location = locationElement ? locationElement.textContent?.trim() as string: "N/A";
+            
+            return {model, location};
+
+            // const carElement = new CarItem(model, yearOfManufacture, price, mileage, manufacturer, location); 
+            // console.log(carElement);
+            // return carElement.location;
         });
     });
 
