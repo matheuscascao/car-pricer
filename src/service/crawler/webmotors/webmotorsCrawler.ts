@@ -1,7 +1,9 @@
 import puppeteer from "puppeteer";
 import CarItem from "../../../models/CarItem";
+import ICarItem from "../../../entities/carEntity";
+import insertCarListings from "../../../repository/database/repository/cars";
 
-async function webMotorsCrawler(model: string, manufacturer: string): Promise<void> {
+async function webMotorsCrawler(model: string, manufacturer: string): Promise<ICarItem[]> {
     const basePageUrl = "https://www.webmotors.com.br/carros/estoque";
 
     const browser = await puppeteer.launch({
@@ -19,7 +21,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<vo
 
     await page.waitForSelector(selector);
 
-    const carsData = await page.$$eval(selector, items => {
+    const carsData: ICarItem[]  = await page.$$eval(selector, items => {
         return items.map(el => {
 
             const modelElement = el.querySelector(".sc-hqyNC");
@@ -44,17 +46,30 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<vo
             const manufacturer = "placeholder";
             const location = locationElement ? locationElement.textContent?.trim() as string: "N/A";
             
-            return {model, location};
+            // model: string;
+            // yearOfManufacture: string;
+            // price: number;
+            // mileage: number;
+            // manufacturer: string;
+            // location: string;   
+
+            return {model, yearOfManufacture, price, mileage, manufacturer, location} as ICarItem;
+
+            // return {model, yearOfManufacture, price, mileage, manufacturer, location};
 
             // const carElement = new CarItem(model, yearOfManufacture, price, mileage, manufacturer, location); 
             // console.log(carElement);
             // return carElement.location;
+
+            // return new CarItem(model, yearOfManufacture, price, mileage, manufacturer, location); 
         });
     });
 
     console.log(carsData);
-
     await browser.close();
+
+    insertCarListings(carsData);
+    return carsData;
 };
 
 export default webMotorsCrawler;
