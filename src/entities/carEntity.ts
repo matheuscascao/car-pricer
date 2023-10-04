@@ -8,11 +8,20 @@
 // }
 export interface ICarItem {
     model: string;
-    yearOfManufacture: string;
+    year_of_manufacture: string;
     price: string;
     mileage: string;
     manufacturer: string;
     location: string;   
 }
 
-export default ICarItem
+export type Car = {
+    model: string;
+    year_of_manufacture: string;
+    price: string;
+    mileage: string;
+    manufacturer: string;
+    location: string;   
+}
+
+export default ICarItem;

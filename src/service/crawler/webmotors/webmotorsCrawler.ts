@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer";
 import CarItem from "../../../models/CarItem";
-import ICarItem from "../../../entities/carEntity";
+import {ICarItem, Car} from "../../../entities/carEntity";
 import insertCarListings from "../../../repository/database/repository/cars";
 
-async function webMotorsCrawler(model: string, manufacturer: string): Promise<ICarItem[]> {
+async function webMotorsCrawler(model: string, manufacturer: string): Promise<Car[]> {
     const basePageUrl = "https://www.webmotors.com.br/carros/estoque";
 
     const browser = await puppeteer.launch({
@@ -21,7 +21,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<IC
 
     await page.waitForSelector(selector);
 
-    const carsData: ICarItem[]  = await page.$$eval(selector, items => {
+    const carsData: Car[]  = await page.$$eval(selector, items => {
         return items.map(el => {
 
             const modelElement = el.querySelector(".sc-hqyNC");
@@ -40,7 +40,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<IC
             // }
 
             const model = modelElement ? modelElement.textContent?.trim() as string: "N/A";
-            const yearOfManufacture = yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() as string: "N/A";
+            const year_of_manufacture = yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() as string: "N/A";
             const price = priceElement ? priceElement.textContent?.trim() as string: "N/A";
             const mileage = mileageElement ? mileageElement[1].textContent?.trim() as string: "N/A";
             const manufacturer = "placeholder";
@@ -53,7 +53,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<IC
             // manufacturer: string;
             // location: string;   
 
-            return {model, yearOfManufacture, price, mileage, manufacturer, location} as ICarItem;
+            return {model, year_of_manufacture, price, mileage, manufacturer, location} as Car;
 
             // return {model, yearOfManufacture, price, mileage, manufacturer, location};
 
@@ -65,7 +65,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<IC
         });
     });
 
-    console.log(carsData);
+    // console.log(carsData);
     await browser.close();
 
     insertCarListings(carsData);
