@@ -20,7 +20,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<Ca
 
     await page.waitForSelector(selector);
 
-    const carsData: CarType[]  = await page.$$eval(selector, items => {
+    const carsData: CarType[] = await page.$$eval(selector, items => {
         return items.map(el => {
 
             const modelElement = el.querySelector(".sc-hqyNC");
@@ -39,10 +39,9 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<Ca
                 const numericString = priceElement.textContent?.trim().replace(/[^\d.-]/g, '');    
                 price = parseFloat(numericString as string);
             }
-            // const mileage = mileageElement ? mileageElement[1].textContent?.trim() as string: "N/A";
             let mileage = 0;
             if (mileageElement[1].textContent?.trim()) {
-                const numericString = mileageElement[1].textContent?.trim().replace(/[^\d.-]/g, '');    
+                const numericString = mileageElement[1].textContent?.trim().replace(/[^\d.-]/g, '');
                 mileage = parseFloat(numericString as string);
             }
             const manufacturer = model.split(" ")[0];
