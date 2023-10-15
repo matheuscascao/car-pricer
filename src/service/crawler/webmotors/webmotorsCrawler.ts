@@ -1,9 +1,8 @@
 import puppeteer from "puppeteer";
-import CarItem from "../../../models/CarItem";
-import {ICarItem, Car} from "../../../entities/carEntity";
+import {CarType} from "../../../entities/carEntity";
 import insertCarListings from "../../../repository/database/repository/cars";
 
-async function webMotorsCrawler(model: string, manufacturer: string): Promise<Car[]> {
+async function webMotorsCrawler(model: string, manufacturer: string): Promise<CarType[]> {
     const basePageUrl = "https://www.webmotors.com.br/carros/estoque";
 
     const browser = await puppeteer.launch({
@@ -21,7 +20,7 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<Ca
 
     await page.waitForSelector(selector);
 
-    const carsData: Car[]  = await page.$$eval(selector, items => {
+    const carsData: CarType[]  = await page.$$eval(selector, items => {
         return items.map(el => {
 
             const modelElement = el.querySelector(".sc-hqyNC");
@@ -30,42 +29,29 @@ async function webMotorsCrawler(model: string, manufacturer: string): Promise<Ca
             const locationElement = el.querySelector(".sc-kgAjT");
             const mileageElement = el.querySelectorAll(".sc-cHGsZl.goowTJ");
 
-            // const carElement: CarItem = {
-            //     model: modelElement ? modelElement.textContent?.trim() : "N/A",
-            //     price: priceElement ? priceElement.textContent?.trim() : "N/A",
-            //     yearOfManufacture: yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() : "N/A",
-            //     location: locationElement ? locationElement.textContent?.trim() : "N/A",
-            //     mileage: mileageElement ? mileageElement[1].textContent?.trim() : "N/A",
-            //     manufacturer: "placeholder"
-            // }
-
             const model = modelElement ? modelElement.textContent?.trim() as string: "N/A";
-            const year_of_manufacture = yearOfManufactureElement ? yearOfManufactureElement[0].textContent?.trim() as string: "N/A";
-            const price = priceElement ? priceElement.textContent?.trim() as string: "N/A";
-            const mileage = mileageElement ? mileageElement[1].textContent?.trim() as string: "N/A";
-            const manufacturer = "placeholder";
+            let year_of_manufacture = 0;
+            if (yearOfManufactureElement[0].textContent?.trim()) {
+                year_of_manufacture = yearOfManufactureElement ? parseInt(yearOfManufactureElement[0].textContent.trim()) as number: 0;
+            }
+            let price = 0;
+            if (priceElement) {
+                const numericString = priceElement.textContent?.trim().replace(/[^\d.-]/g, '');    
+                price = parseFloat(numericString as string);
+            }
+            // const mileage = mileageElement ? mileageElement[1].textContent?.trim() as string: "N/A";
+            let mileage = 0;
+            if (mileageElement[1].textContent?.trim()) {
+                const numericString = mileageElement[1].textContent?.trim().replace(/[^\d.-]/g, '');    
+                mileage = parseFloat(numericString as string);
+            }
+            const manufacturer = model.split(" ")[0];
             const location = locationElement ? locationElement.textContent?.trim() as string: "N/A";
             
-            // model: string;
-            // yearOfManufacture: string;
-            // price: number;
-            // mileage: number;
-            // manufacturer: string;
-            // location: string;   
-
-            return {model, year_of_manufacture, price, mileage, manufacturer, location} as Car;
-
-            // return {model, yearOfManufacture, price, mileage, manufacturer, location};
-
-            // const carElement = new CarItem(model, yearOfManufacture, price, mileage, manufacturer, location); 
-            // console.log(carElement);
-            // return carElement.location;
-
-            // return new CarItem(model, yearOfManufacture, price, mileage, manufacturer, location); 
+            return {model, year_of_manufacture, price, mileage, manufacturer, location} as CarType;
         });
     });
 
-    // console.log(carsData);
     await browser.close();
 
     insertCarListings(carsData);

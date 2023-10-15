@@ -3,7 +3,7 @@ import ICarItem from "../entities/carEntity";
 // export type CarItem = {
 //     model: string | undefined;
 //     price: string | undefined;
-//     yearOfManufacture: string | undefined;
+//     year_of_manufacture: string | undefined;
 //     location: string | undefined;
 //     mileage: string | undefined;
 //     manufacturer: string | undefined;
@@ -12,7 +12,7 @@ import ICarItem from "../entities/carEntity";
 
 export class CarItem implements ICarItem {
     private _model: string;
-    private _yearOfManufacture: string;
+    private _year_of_manufacture: number;
     private _price!: number;
     private _mileage!: number;
     private _manufacturer: string;
@@ -20,14 +20,14 @@ export class CarItem implements ICarItem {
 
     constructor(
         model: string,
-        yearOfManufacture: string,
-        price: string,
-        mileage: string,
+        year_of_manufacture: number,
+        price: number,
+        mileage: number,
         manufacturer: string,
         location: string
     ) {
         this._model = model;
-        this._yearOfManufacture = yearOfManufacture;
+        this._year_of_manufacture = year_of_manufacture;
         this.price = price;
         this.mileage = mileage;
         this._manufacturer = manufacturer;
@@ -42,32 +42,31 @@ export class CarItem implements ICarItem {
         this._model = value;
     }
 
-    get yearOfManufacture(): string {
-        return this._yearOfManufacture;
+    get year_of_manufacture(): number {
+        return this._year_of_manufacture;
     }
 
-    set yearOfManufacture(value: string) {
-        // normalize different formats to year format, like 2011/2012 or so
-        this._yearOfManufacture = value;
+    set year_of_manufacture(value: number) {
+        // check different formats to year format, like 2011/2012 or so
+        this._year_of_manufacture = value;
     }
 
     get price(): number {
         return this._price;
     }
 
-    set price(value: string) {
-        const numericString = value.replace(/[^\d.-]/g, '');    
-        const floatValue = parseFloat(numericString);
-        
-        this._price = floatValue;
+    set price(value: number) {
+        // check different formats to price format, like 10.000,00 or so
+    
+        this._price = value;
     }
 
     get mileage(): number {
         return this._mileage;
     }
 
-    set mileage(value: string) {
-        this._mileage = parseInt(value);
+    set mileage(value: number) {
+        this._mileage = value;
     }
 
     get manufacturer(): string {

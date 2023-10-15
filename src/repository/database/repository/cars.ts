@@ -1,7 +1,8 @@
 import supabase from "..";
-import {ICarItem, Car} from "../../../entities/carEntity";
+import { CarType } from "../../../entities/carEntity";
 
-async function insertCarListings(carListings: Car[]): Promise<void> {
+async function insertCarListings(carListings: CarType[]): Promise<void> {
+  
   console.log(`Car Listings: ${carListings}`);
   for (const carListing of carListings) {
       const { data, error } = await supabase
